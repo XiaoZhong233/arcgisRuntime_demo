@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WpfApp1.Resouces">
+    <ContextMenu x:Key="TreeContextMenu">
+        <MenuItem Name="remove" Header="移除图层"/>
+        <Separator></Separator>
+        <MenuItem Name="rename" Header="重命名"/>
+    </ContextMenu>
+</ResourceDictionary>

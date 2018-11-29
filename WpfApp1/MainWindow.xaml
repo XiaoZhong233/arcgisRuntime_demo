@@ -1,0 +1,158 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Resouces/earth_ic.png"
+        Title="基于arcgisRuntime的二次开发Demo" Height="700" Width="1000">
+
+    <!--引用外部资源-->
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/resouces/TreeContextMenu.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0*"/>
+            <RowDefinition Height="181*"/>
+            <RowDefinition Height="153*"/>
+            <RowDefinition Height="168*"/>
+            <RowDefinition Height="167*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="275*"/>
+            <ColumnDefinition Width="520*"/>
+            <ColumnDefinition Width="398*"/>
+        </Grid.ColumnDefinitions>
+        <esri:MapView x:Name="MyMapView" ViewpointChanged="myView_viewPointChange" Grid.ColumnSpan="2" Margin="5.2,24,-0.4,0.6" Grid.RowSpan="4" Grid.Column="1" Grid.Row="1"/>
+        <Border  HorizontalAlignment="Center"  Grid.Row="4"  Grid.ColumnSpan="1" Grid.Column="1" Margin="155.2,24.6,154.6,0.6" Width="123">
+            <Label x:Name="LoadStatusLabel"
+                   Content="Map's load status :"
+                   HorizontalAlignment="Right"
+                   FontWeight="SemiBold" Margin="0,0,0,0" Height="63" VerticalAlignment="Bottom" />
+
+        </Border>
+
+        <Button Name="complete_btn" Visibility="Hidden" Grid.Column="1" Grid.Row="4"  Click="onCompleteItemClick" HorizontalAlignment="Center" VerticalAlignment="Center" Height="42" Margin="33.2,95.6,283.4,29.6" Width="117" RenderTransformOrigin="-1.044,0.57" Background="Black" Foreground="White">完成</Button>
+
+
+        <!--鹰眼地图-->
+        <Border x:Name="EagleBorder" BorderBrush="Magenta" BorderThickness="2"
+                Margin="0,11.6,-0.4,0.6" Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="1" HorizontalAlignment="Right" Width="202">
+            <esri:MapView x:Name="eagleMapView" IsEnabled="False" RenderTransformOrigin="0.35,3.063"/>
+        </Border>
+
+        <!--菜单栏-->
+        <Menu x:Name="menu" Height="25" VerticalAlignment="Top" Grid.ColumnSpan="3" Margin="0,0,-0.4,0" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
+            <MenuItem Header=" 文件" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="45">
+                <MenuItem Header="打开..." Click="openFile_click" HorizontalAlignment="Left" IsChecked="True" InputGestureText="无快捷键"/>
+
+            </MenuItem>
+            <MenuItem Header="底图"   >
+                <MenuItem  Name="a" Header="空白底图"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick" />
+                <MenuItem  Name="b" Header="Streets (Raster)" IsChecked="True" HorizontalAlignment="Left"  InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick" />
+                <MenuItem  Name="c"  Header="Streets (Vector)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick"/>
+                <MenuItem  Name="d"  Header="Streets - Night (Vector)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick"/>
+                <MenuItem  Name="e"  Header="Imagery (Raster)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick"/>
+                <MenuItem  Name="f"  Header="Imagery with Labels (Raster)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick"/>
+                <MenuItem  Name="g"  Header="Imagery with Labels (Vector)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick"/>
+                <MenuItem  Name="h"  Header="Dark Gray Canvas (Vector)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"  Click="onBaseMapMenuItemCLick"/>
+                <MenuItem  Name="i"  Header="Light Gray Canvas (Raster)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick"/>
+                <MenuItem  Name="j"  Header="Light Gray Canvas (Vector)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick"/>
+                <MenuItem  Name="k"  Header="Navigation (Vector)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick"/>
+                <MenuItem  Name="l"  Header="OpenStreetMap (Raster)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick"/>
+            </MenuItem>
+            <MenuItem Header="我的online地图" Click="openOnlineMap">
+
+            </MenuItem>
+
+            <MenuItem Header="绘制">
+                <MenuItem Name="drawPoint" Header="绘制点" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onDrawPointItemClick"/>
+                <MenuItem Name="drawLine" Header="绘制线" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onDrawLineItemClick"/>
+                <MenuItem Name="drawArea" Header="绘制面" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onDrawAreaItemClick"/>
+                <MenuItem Name="complete" Header="完成绘制" HorizontalAlignment="Left" IsCheckable="False" InputGestureText="无快捷键" Click="onCompleteItemClick"/>
+                <MenuItem Name="clear" Header="清除绘制" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onClearDrawItemClick"/>
+
+            </MenuItem>
+
+            <MenuItem Header="操作">
+                <MenuItem Name="identify" Header="选择图形" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+                <MenuItem Name="EditVertexMenuItem" Header="编辑顶点" IsEnabled="False" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+                <MenuItem Name="StopEditMenuItem" Header="停止编辑" IsEnabled="False" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+                <MenuItem/>
+                <MenuItem Name="buffer" Header="缓冲区"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+                <MenuItem Name="clip" Header="裁剪"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+                <MenuItem Name="cut" Header="分割"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+                <MenuItem Name="generalize" Header="Generalize(暂未实现)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+                <MenuItem Name="intersections" Header="Intersections(暂未实现)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+                <MenuItem Name="simplify" Header="Simplify(暂未实现)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+                <MenuItem Name="union" Header="Union(暂未实现)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+            </MenuItem>
+
+            <MenuItem Header="Local Server"   >
+                <MenuItem Name="test1" Header="test1" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" />
+            </MenuItem>
+
+        </Menu>
+
+        <Label Grid.Column="1" Grid.Row="1" Margin="265.2,0,80.4,155.8">当前编辑状态：</Label>
+        <TextBlock Grid.Column="1" Grid.Row="1" TextAlignment="Justify" Margin="353.2,5,4.6,159.8" Name="operationStatus" Grid.ColumnSpan="2">HELLO</TextBlock>
+
+
+        <!--图层树模板-->
+        <TreeView Margin="3,24,2.8,3.6" Name="layerTreeView" 
+                  Grid.RowSpan="4" RenderTransformOrigin="0.5,0.5"
+                  Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+
+            <TreeView.ItemTemplate >
+                <HierarchicalDataTemplate DataType="{x:Type local:PropertyNodeItem}" ItemsSource="{Binding Path=Children}" >
+                    <StackPanel Orientation="Horizontal" Margin="0,20,10,0" Width="300">
+                        <!--每一个item的布局-->
+                        <CheckBox VerticalAlignment="Center" Margin="0,0,10,2" IsChecked="{Binding IsChecked }" Checked="onChecked" Unchecked="onUnChecked"/>
+                        <Image VerticalAlignment="Center" Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,2,2"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding DisplayName}"/>
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Name="rename" Header="重命名" Click="onRenameItemClick"/>
+                                <MenuItem Name="remove" Header="移除图层" Click="onRemoveItemClick"/>
+                                <MenuItem Name="properity" Header="属性表" Click="onProperityClick"/>
+                                <MenuItem Name="symbol" Header="符号" Click="onSymbolItemClick"/>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                        <!--提示框-->
+                        <StackPanel.ToolTip>
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" TextWrapping="Wrap" MaxWidth="200"/>
+                        </StackPanel.ToolTip>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            <!--需要注意的是，如果是数据绑定生成节点，则样式对每个节点都生效
+                如果是静态生成，则只对下一层的结点生效-->
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="True" />
+                    <EventSetter Event="TreeViewItem.PreviewMouseRightButtonDown" Handler="TreeViewItem_PreviewMouseRightButtonDown"/>
+                    <EventSetter Event="TreeViewItem.PreviewMouseDoubleClick" Handler="TreeViewItem_PreviewMouseDoubleClick"/>
+
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+    </Grid>
+
+
+
+
+
+</Window>
