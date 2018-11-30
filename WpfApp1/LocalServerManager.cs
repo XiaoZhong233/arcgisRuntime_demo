@@ -13,6 +13,9 @@ using System.Windows.Threading;
 
 namespace WpfApp1
 {
+    /// <summary>
+    /// 本地服务器 使用gpk
+    /// </summary>
     public class LocalServerManager
     {
         private MainWindow mainWindow;
