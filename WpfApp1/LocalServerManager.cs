@@ -27,8 +27,8 @@ namespace WpfApp1
         public LocalServerManager(MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
-            init();
-            initGPService();
+            //init();
+            //initGPService();
         }
 
         public void init()
