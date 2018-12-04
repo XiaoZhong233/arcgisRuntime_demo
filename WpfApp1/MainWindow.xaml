@@ -57,8 +57,9 @@
         <!--菜单栏-->
         <Menu x:Name="menu" Height="25" VerticalAlignment="Top" Grid.ColumnSpan="3" Margin="0,0,-0.4,0" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
             <MenuItem Header=" 文件" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="45">
-                <MenuItem Header="打开..." Click="openFile_click" HorizontalAlignment="Left" IsChecked="True" InputGestureText="无快捷键"/>
-
+                <MenuItem Header="打开..." Click="openFile_click" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+                <MenuItem Header="openLocalGeoDatabase" Name="OpenGDB" Click="openLocalGeoDBAsync" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+                
             </MenuItem>
             <MenuItem Header="底图"   >
                 <MenuItem  Name="a" Header="空白底图"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onBaseMapMenuItemCLick" />
@@ -99,6 +100,11 @@
                 <MenuItem Name="intersections" Header="Intersections(暂未实现)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
                 <MenuItem Name="simplify" Header="Simplify(暂未实现)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
                 <MenuItem Name="union" Header="Union(暂未实现)"  HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onOperationMenuItemCLick"/>
+            </MenuItem>
+
+            <MenuItem Header="查询">
+                <MenuItem Name="queryByAttribute" Header="属性查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByAtb"/>
+                <MenuItem Name="queryByLocation" Header="空间查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByLoc" />
             </MenuItem>
 
             <MenuItem Header="Local Server"   >

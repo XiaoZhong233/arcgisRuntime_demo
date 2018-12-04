@@ -68,6 +68,11 @@ namespace WpfApp1
         private Graphic cuttedGraphic;//被分割的要素
 
         private LocalServerManager localServer;
+
+        private Geodatabase myDatbase;
+        private IReadOnlyList<GeodatabaseFeatureTable> myTables;
+
+
         #endregion
 
         #region 属性
@@ -254,7 +259,8 @@ namespace WpfApp1
             //设置底图的视点
             MyMapView.SetViewpoint(new Viewpoint(23.15019, 113.337059, 15));
 
-
+            myDatbase = null;
+            myTables = null;
 
             // use a static method on Map to create a map from a web map url
             //异步加载,不阻塞当前进程
@@ -1012,6 +1018,68 @@ namespace WpfApp1
         }
 
         /// <summary>
+        /// 将矢量要素图层加入地图，更新至图层树控件
+        /// </summary>
+        private async void addFeatureLayerAsync(FeatureLayer featureLayer, string file)
+        {
+            //打开文件
+            MyMapView.Map.OperationalLayers.Add(featureLayer);
+            await MyMapView.SetViewpointGeometryAsync(featureLayer.FullExtent);
+            //截取文件名
+            string directoryName = Path.GetDirectoryName(file);//截取出除去文件类型的路径名
+            string fileName = Path.GetFileNameWithoutExtension(file);//文件名
+            //更新图层树
+            PropertyNodeItem root = null;
+
+            if (layersMap.TryGetValue(directoryName, out root))
+            {
+
+                PropertyNodeItem node = new PropertyNodeItem(file, fileName, featureLayer, root);
+                node.Icon = @"\Resouces\data_ic.png";
+                //如果已经有该文件，直接返回
+                if (fileNames.Contains(fileName))
+                {
+                    //在操作图层中移除该图层，为了和图层树保持一致,不可以有重复的图层
+                    MyMapView.Map.OperationalLayers.Remove(featureLayer);
+                    return;
+                }
+                fileNames.Add(fileName);
+                //将图层加入到父节点保存的列表中
+                List<Layer> layers = root.layers;
+                layers.Add(featureLayer);
+                //将子节点加入父节点中
+
+                root.Children.Add(node);
+            }
+            //需要新建父节点
+            else
+            {
+                //新建父节点
+                List<Layer> layers = new List<Layer>();
+                layers.Add(featureLayer);
+                root = new PropertyNodeItem(directoryName, directoryName, layers);
+                root.Icon = @"\Resouces\data_ic.png";
+
+                layersMap.Add(directoryName, root);
+                //新建子节点
+                fileNames.Add(fileName);
+                PropertyNodeItem childNode = new PropertyNodeItem(file, fileName, featureLayer, root);
+                childNode.Icon = @"\Resouces\data_ic.png";
+                //将子节点加入父节点中
+                root.Children.Add(childNode);
+
+            }
+            if (!itemList.Contains(root))
+            {
+                itemList.Add(root);
+            }
+
+            this.layerTreeView.ItemsSource = itemList;
+            layerTreeView.Items.Refresh();
+        }
+
+
+        /// <summary>
         /// 打开文件，仅支持shapefile格式
         /// </summary>
         /// <param name="sender"></param>
@@ -1048,62 +1116,63 @@ namespace WpfApp1
                         
                         if (MyMapView != null)
                         {
-                            //打开文件
-                            MyMapView.Map.OperationalLayers.Add(featureLayer);
-                            await MyMapView.SetViewpointGeometryAsync(featureLayer.FullExtent);
+                            addFeatureLayerAsync(featureLayer, file);
+                            ////打开文件
+                            //MyMapView.Map.OperationalLayers.Add(featureLayer);
+                            //await MyMapView.SetViewpointGeometryAsync(featureLayer.FullExtent);
 
-                            string directoryName = Path.GetDirectoryName(file);//截取出除去文件类型的路径名
-                            string fileName = Path.GetFileNameWithoutExtension(file);//文件名
-                            
-                            //更新图层树
+                            //string directoryName = Path.GetDirectoryName(file);//截取出除去文件类型的路径名
+                            //string fileName = Path.GetFileNameWithoutExtension(file);//文件名
 
-                            PropertyNodeItem root = null;
-                            if(layersMap.TryGetValue(directoryName,out root))
-                            {
+                            ////更新图层树
 
-                                PropertyNodeItem node = new PropertyNodeItem(file, fileName,featureLayer,root);
-                                node.Icon = @"\Resouces\data_ic.png";
-                                //如果已经有该文件，直接返回
-                                if (fileNames.Contains(fileName))
-                                {
-                                    //在操作图层中移除该图层，为了和图层树保持一致,不可以有重复的图层
-                                    MyMapView.Map.OperationalLayers.Remove(featureLayer);
-                                    return;
-                                }
-                                fileNames.Add(fileName);
-                                //将图层加入到父节点保存的列表中
-                                List<Layer> layers = root.layers;
-                                layers.Add(featureLayer);
-                                //将子节点加入父节点中
-                                
-                                root.Children.Add(node);
-                            }
-                            //需要新建父节点
-                            else
-                            {
-                                //新建父节点
-                                List<Layer> layers = new List<Layer>();
-                                layers.Add(featureLayer);
-                                root = new PropertyNodeItem(directoryName, directoryName,layers);
-                                root.Icon = @"\Resouces\data_ic.png";
-                                
-                                layersMap.Add(directoryName, root);
-                                //新建子节点
-                                fileNames.Add(fileName);
-                                PropertyNodeItem childNode = new PropertyNodeItem(file, fileName, featureLayer,root);
-                                childNode.Icon = @"\Resouces\data_ic.png";
-                                //将子节点加入父节点中
-                                root.Children.Add(childNode);
-                                
-                            }
-                            if (!itemList.Contains(root))
-                            {
-                                itemList.Add(root);
-                            }
-                            
-                            this.layerTreeView.ItemsSource = itemList;
-                            layerTreeView.Items.Refresh();
-                           
+                            //PropertyNodeItem root = null;
+                            //if(layersMap.TryGetValue(directoryName,out root))
+                            //{
+
+                            //    PropertyNodeItem node = new PropertyNodeItem(file, fileName,featureLayer,root);
+                            //    node.Icon = @"\Resouces\data_ic.png";
+                            //    //如果已经有该文件，直接返回
+                            //    if (fileNames.Contains(fileName))
+                            //    {
+                            //        //在操作图层中移除该图层，为了和图层树保持一致,不可以有重复的图层
+                            //        MyMapView.Map.OperationalLayers.Remove(featureLayer);
+                            //        return;
+                            //    }
+                            //    fileNames.Add(fileName);
+                            //    //将图层加入到父节点保存的列表中
+                            //    List<Layer> layers = root.layers;
+                            //    layers.Add(featureLayer);
+                            //    //将子节点加入父节点中
+
+                            //    root.Children.Add(node);
+                            //}
+                            ////需要新建父节点
+                            //else
+                            //{
+                            //    //新建父节点
+                            //    List<Layer> layers = new List<Layer>();
+                            //    layers.Add(featureLayer);
+                            //    root = new PropertyNodeItem(directoryName, directoryName,layers);
+                            //    root.Icon = @"\Resouces\data_ic.png";
+
+                            //    layersMap.Add(directoryName, root);
+                            //    //新建子节点
+                            //    fileNames.Add(fileName);
+                            //    PropertyNodeItem childNode = new PropertyNodeItem(file, fileName, featureLayer,root);
+                            //    childNode.Icon = @"\Resouces\data_ic.png";
+                            //    //将子节点加入父节点中
+                            //    root.Children.Add(childNode);
+
+                            //}
+                            //if (!itemList.Contains(root))
+                            //{
+                            //    itemList.Add(root);
+                            //}
+
+                            //this.layerTreeView.ItemsSource = itemList;
+                            //layerTreeView.Items.Refresh();
+
 
                         }
                     }
@@ -1132,6 +1201,61 @@ namespace WpfApp1
 
         }
 
+        /// <summary>
+        /// 打开GeoDataBase文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void openLocalGeoDBAsync(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.OpenFileDialog openDlg = new
+                    System.Windows.Forms.OpenFileDialog();
+            openDlg.Filter = "GeoDatabase File(*.geodatabase)|*.geodatabase";
+            openDlg.Title = "Open GeoDatabase File";
+            if (openDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string path = openDlg.FileName;
+                try
+                {
+                    myDatbase = await Geodatabase.OpenAsync(path);//打开数据库 
+                    myTables = myDatbase.GeodatabaseFeatureTables;//获取所有表对象
+                    //遍历所有表对象
+                    foreach(GeodatabaseFeatureTable t in myTables)
+                    {
+                        await t.LoadAsync();
+                        FeatureLayer ly = new FeatureLayer(t);//构造要素图层 
+                        //MyMapView.Map.OperationalLayers.Add(ly); //添加图层到地图控件中
+                        addFeatureLayerAsync(ly, path);
+                        OpenGDB.IsEnabled = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show(ex.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// 属性查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void queryByAtb(object sender, RoutedEventArgs e)
+        {
+            QueryForm qf = new QueryForm(myTables);
+            qf.ShowDialog();
+        }
+
+        /// <summary>
+        /// 空间查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void queryByLoc(object sender, RoutedEventArgs e)
+        {
+
+        }
 
         /// <summary>
         /// 显示自定义在线地图

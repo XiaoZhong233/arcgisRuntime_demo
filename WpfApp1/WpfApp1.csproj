@@ -110,6 +110,9 @@
     <Compile Include="form\ProsperityForm.Designer.cs">
       <DependentUpon>ProsperityForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="form\QueryForm.xaml.cs">
+      <DependentUpon>QueryForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocalServerManager.cs" />
     <Compile Include="ViewModel\MyList.cs" />
     <Compile Include="ViewModel\NotifyPropertyBase.cs" />
@@ -125,6 +128,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="form\LocalServerGeoprocessing.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="form\QueryForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
