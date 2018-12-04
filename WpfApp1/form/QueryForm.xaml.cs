@@ -82,6 +82,12 @@ namespace WpfApp1.form
         /// </summary>
         private void initControlsEvents()
         {
+
+            btn_clear.Click += (s, e) =>
+            {
+                textBoxSQL.Clear();
+            };
+
             //cmb选择表事件回调
             comboBoxLayers.SelectionChanged += (s, e) =>
             {
@@ -99,14 +105,94 @@ namespace WpfApp1.form
             };
 
             //表名列表选择回调
-            listBoxFields.SelectionChanged += (s, e) =>
+            listBoxFields.SelectionChanged += async (s, e) =>
             {
-
+                if(SelectedTable!=null && listBoxFields.SelectedIndex > -1)
+                {
+                    Field selField = selectedTable.Fields.ElementAt(listBoxFields.SelectedIndex);
+                    FeatureQueryResult fqr = await selectedTable.QueryFeaturesAsync(new QueryParameters());
+                    if (fqr == null)
+                        return;
+                    listBoxFieldValue.Items.Clear();
+                    foreach(Feature ft in fqr)
+                    {
+                        //取得当前查询到的featureLayer的字段值
+                        string value = ft.GetAttributeValue(selField).ToString();
+                        //检查该值是否在listValue中
+                        if (!listBoxFieldValue.Items.Contains(value))
+                        {
+                            listBoxFieldValue.Items.Add(value);
+                        }
+                    }
+                }
             };
+
+            //表名列表双击回调
+            listBoxFields.MouseDoubleClick += (s, e) =>
+            {
+                string field = listBoxFields.SelectedItem.ToString();
+                textBoxSQL.Text = string.Concat(textBoxSQL.Text + " ", field);
+            };
+
+            listBoxFieldValue.MouseDoubleClick += (s, e) =>
+            {
+                string selValue = listBoxFieldValue.SelectedItem.ToString();
+                if(textBoxSQL.Text.Trim().EndsWith("AND") || textBoxSQL.Text.Trim().EndsWith("OR"))
+                {
+                    return;
+                }
+                //如果为模糊查询，则插入值在%号前面
+                if (textBoxSQL.Text.Trim().EndsWith("%"))
+                {
+                    textBoxSQL.Text = textBoxSQL.Text.Insert(textBoxSQL.Text.Count() - 1, "'"+selValue+"'");
+                    return;
+                }
+
+                textBoxSQL.Text = String.Concat(textBoxSQL.Text + " ", "'", selValue, "'");
+            };
+
+
+        }
+
+        
+        private void onOperationBtnClick(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn == null)
+                return;
+            switch (btn.Name)
+            {
+                case "equal":
+                    break;
+                case "unequal":
+                    break;
+                case "like":
+                    break;
+                case "lessThan":
+                    break;
+                case "lessThanOrEqual":
+                    break;
+                case "and":
+                    break;
+                case "moreThan":
+                    break;
+                case "moreThanOrEqual":
+                    break;
+                case "or":
+                    break;
+                default:
+                    break;
+            }
         }
         #endregion
 
+        #region 私有方法
+        private void concatSQLString(string)
+        {
 
+        }
+
+        #endregion
 
 
     }

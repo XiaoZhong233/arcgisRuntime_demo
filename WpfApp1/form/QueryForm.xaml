@@ -34,22 +34,23 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button TextBlock.FontSize="25" Margin="2" Grid.Column="0" Grid.Row="0">=</Button>
-                <Button TextBlock.FontSize="25" Margin="2" Grid.Column="1" Grid.Row="0" >&lt;&gt;</Button>
-                <Button TextBlock.FontSize="20" Margin="2" Grid.Column="2" Grid.Row="0">LIKE</Button>
-                <Button TextBlock.FontSize="25" Margin="2" Grid.Column="0" Grid.Row="1">&lt;</Button>
-                <Button TextBlock.FontSize="25" Margin="2" Grid.Column="1" Grid.Row="1">&lt;=</Button>
-                <Button TextBlock.FontSize="20" Margin="2" Grid.Column="3" Grid.Row="1">AND</Button>
-                <Button TextBlock.FontSize="25" Margin="2" Grid.Column="0" Grid.Row="2">&gt;</Button>
-                <Button TextBlock.FontSize="25" Margin="2" Grid.Column="1" Grid.Row="2">&gt;=</Button>
-                <Button TextBlock.FontSize="20" Margin="2" Grid.Column="2" Grid.Row="2">OR</Button>
+                <Button Name="equal" TextBlock.FontSize="25" Margin="2" Grid.Column="0" Grid.Row="0" Click="onOperationBtnClick">=</Button>
+                <Button Name="unequal" TextBlock.FontSize="25" Margin="2" Grid.Column="1" Grid.Row="0" Click="onOperationBtnClick" >&lt;&gt;</Button>
+                <Button Name="like" TextBlock.FontSize="20" Margin="2" Grid.Column="2" Grid.Row="0" Click="onOperationBtnClick">LIKE</Button>
+                <Button Name="lessThan" TextBlock.FontSize="25" Margin="2" Grid.Column="0" Grid.Row="1" Click="onOperationBtnClick">&lt;</Button>
+                <Button Name="lessThanOrEqual" TextBlock.FontSize="25" Margin="2" Grid.Column="1" Grid.Row="1" Click="onOperationBtnClick">&lt;=</Button>
+                <Button Name="and" TextBlock.FontSize="20" Margin="2" Grid.Column="3" Grid.Row="1" Click="onOperationBtnClick">AND</Button>
+                <Button Name="moreThan" TextBlock.FontSize="25" Margin="2" Grid.Column="0" Grid.Row="2" Click="onOperationBtnClick">&gt;</Button>
+                <Button Name="moreThanOrEqual" TextBlock.FontSize="25" Margin="2" Grid.Column="1" Grid.Row="2" Click="onOperationBtnClick">&gt;=</Button>
+                <Button Name="or" TextBlock.FontSize="20" Margin="2" Grid.Column="2" Grid.Row="2" Click="onOperationBtnClick">OR</Button>
             </Grid>
 
         </Border>
         <ListBox Name="listBoxFields" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0.2,263.8,3.2"/>
         <ListBox Name="listBoxFieldValue" Grid.Column="2" Grid.Row="1" Margin="0.2,0.2,-0.4,3.2"/>
         <TextBox Name="textBoxSQL" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderThickness="2" Margin="8,8.8,7.6,5.4" Padding="10" TextBlock.FontSize="14"/>
-        <Button Content="确定" Grid.Column="2" Grid.Row="3" Margin="126.2,9.6,19.6,10"/>
-        <Button Content="取消" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="223.2,9.6,186.6,10"/>
+        <Button Name="btn_OK" Content="确定" Grid.Column="2" Grid.Row="3" Margin="126.2,9.6,19.6,10"/>
+        <Button Name="btn_cancel" Content="取消" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="223.2,9.6,186.6,10"/>
+        <Button Name="btn_clear" Content="清空SQL" Grid.Column="1" Grid.Row="3" Margin="48.2,9.6,96.8,10"/>
     </Grid>
 </Window>

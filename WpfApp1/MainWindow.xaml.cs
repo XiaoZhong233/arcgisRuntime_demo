@@ -1217,6 +1217,7 @@ namespace WpfApp1
                 string path = openDlg.FileName;
                 try
                 {
+
                     myDatbase = await Geodatabase.OpenAsync(path);//打开数据库 
                     myTables = myDatbase.GeodatabaseFeatureTables;//获取所有表对象
                     //遍历所有表对象
