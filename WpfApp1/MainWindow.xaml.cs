@@ -1261,12 +1261,13 @@ namespace WpfApp1
             System.Windows.Controls.MenuItem item = sender as System.Windows.Controls.MenuItem;
             switch (item.Name)
             {
-                case "queryByPoint":
+                case "queryByPt":
                     curQueryGeoType = QueryGeoType.点;
-
+                    CurOperationType = OperationType.查询;
                     break;
                 case "queryByRec":
                     curQueryGeoType = QueryGeoType.矩形;
+                    CurOperationType = OperationType.查询;
                     break;
             }
         }
@@ -1898,9 +1899,17 @@ namespace WpfApp1
                             //IReadOnlyList<IdentifyLayerResult> results = await MyMapView.IdentifyLayersAsync(ScreenPos, 15, false);
                             identifyLayer(ScreenPos, results =>
                             {
+                                
                                 if (locationQueryResultsWindow != null && locationQueryResultsWindow.IsClosed)
                                 {
+                                    if (locationQueryResultsWindow.IsClosed)
+                                    {
+                                        curQueryGeoType = QueryGeoType.无;
+                                        CurOperationType = OperationType.无;
+                                        return;
+                                    }
                                     locationQueryResultsWindow = null;//将子窗体对象置为空
+                                    
                                 }
                                 if(locationQueryResultsWindow == null)
                                 {

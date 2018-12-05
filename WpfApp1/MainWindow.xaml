@@ -104,7 +104,11 @@
 
             <MenuItem Header="查询">
                 <MenuItem Name="queryByAttribute" Header="属性查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByAtb"/>
-                <MenuItem Name="queryByLocation" Header="空间查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByLoc" />
+                <MenuItem Name="queryByLocation" Header="空间查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByLoc" >
+                    <MenuItem Name="queryByPt" Header="按点查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByLoc" />
+                    <MenuItem Name="queryByRec" Header="按矩形查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByLoc" />
+                    </MenuItem>
+
             </MenuItem>
 
             <MenuItem Header="Local Server"   >
