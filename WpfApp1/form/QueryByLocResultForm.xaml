@@ -1,0 +1,23 @@
+﻿<Window x:Class="WpfApp1.form.QueryByLocResultForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1.form"
+        mc:Ignorable="d"
+        Title="QueryByLocResultForm" Height="429.146" Width="312.683">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="17*"/>
+            <RowDefinition Height="211*"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox Grid.Column="0" Grid.Row="0" Margin="5"/>
+        <ComboBox Grid.Column="1" Grid.Row="0" Margin="5"/>
+        
+    </Grid>
+</Window>

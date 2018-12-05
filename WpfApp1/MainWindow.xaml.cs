@@ -1259,11 +1259,11 @@ namespace WpfApp1
         private void queryByLoc(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.MenuItem item = sender as System.Windows.Controls.MenuItem;
+            CurOperationType = OperationType.查询;
             switch (item.Name)
             {
                 case "queryByPoint":
-                    curQueryGeoType = QueryGeoType.点;
-
+                    curQueryGeoType = QueryGeoType.点;       
                     break;
                 case "queryByRec":
                     curQueryGeoType = QueryGeoType.矩形;
@@ -1734,7 +1734,7 @@ namespace WpfApp1
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onMapViewLeftMouseButtonDownAsync(object sender,MouseButtonEventArgs e)
+        private async Task onMapViewLeftMouseButtonDownAsync(object sender,MouseButtonEventArgs e)
         {
             IInputElement mv = sender as IInputElement;
             if (mv != null && graphicLayer!=null)
@@ -1891,6 +1891,17 @@ namespace WpfApp1
                                 complete_btn.Visibility = Visibility.Hidden;
                             }
                         });
+                        break;
+                    case OperationType.查询:
+                        if (curQueryGeoType == QueryGeoType.点)
+                        {
+                            IReadOnlyList<IdentifyLayerResult> results = await
+                                            MyMapView.IdentifyLayersAsync(ScreenPos, 15, false);
+                            if (results != null)
+                            {
+
+                            }
+                        }
                         break;
                     default:
                         break;
