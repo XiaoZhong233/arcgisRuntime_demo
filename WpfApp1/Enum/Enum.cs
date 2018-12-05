@@ -16,7 +16,8 @@ namespace WpfApp1.Enum
         选择,
         裁剪,
         缓冲区,
-        分割
+        分割,
+        查询
     }
 
     public enum QueryGeoType
