@@ -34,6 +34,7 @@ namespace WpfApp1.form
         #region 初始化
         public QueryForm(IReadOnlyList<GeodatabaseFeatureTable> tables)
         {
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
             init(tables);
             initFormEvents();
@@ -105,12 +106,12 @@ namespace WpfApp1.form
             };
 
             //表名列表选择回调
-            listBoxFields.SelectionChanged += async (s, e) =>
+            listBoxFields.SelectionChanged +=  (s, e) =>
             {
                 if(SelectedTable!=null && listBoxFields.SelectedIndex > -1)
                 {
                     Field selField = selectedTable.Fields.ElementAt(listBoxFields.SelectedIndex);
-                    FeatureQueryResult fqr = await selectedTable.QueryFeaturesAsync(new QueryParameters());
+                    FeatureQueryResult fqr = selectedTable.QueryFeaturesAsync(new QueryParameters()).Result;
                     if (fqr == null)
                         return;
                     listBoxFieldValue.Items.Clear();
@@ -151,10 +152,45 @@ namespace WpfApp1.form
                 textBoxSQL.Text = String.Concat(textBoxSQL.Text + " ", "'", selValue, "'");
             };
 
+            btn_OK.Click += (s, e) =>
+            {
+                //setBusyOverLay(true);
+                
+                try
+                {
+                    
+                    FeatureQueryResult result = query(textBoxSQL.Text.ToString());
+                    
+                    if (result != null)
+                    {
+                        setBusyOverLay(false);
+                        QueryResultForm qrf = new QueryResultForm(result);
+                        qrf.Show();
+                        //setBusyOverLay(false);
+                        this.DialogResult = true;
+                        this.Close();
+                    }
+                }catch(Exception ex)
+                {
+                    //setBusyOverLay(false);
+                    MessageBox.Show("表达式无效", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            };
 
+            btn_cancel.Click += (s, e) =>
+            {
+                this.DialogResult = false;
+                this.Close();
+            };
+
+            
         }
 
-        
+        /// <summary>
+        /// 操作符按钮点击处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onOperationBtnClick(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -163,22 +199,31 @@ namespace WpfApp1.form
             switch (btn.Name)
             {
                 case "equal":
+                    concatSQLString("=");
                     break;
                 case "unequal":
+                    concatSQLString("<>");
                     break;
                 case "like":
+                    concatSQLString("like %%");
                     break;
                 case "lessThan":
+                    concatSQLString("<");
                     break;
                 case "lessThanOrEqual":
+                    concatSQLString("<=");
                     break;
                 case "and":
+                    concatSQLString("and");
                     break;
                 case "moreThan":
+                    concatSQLString(">");
                     break;
                 case "moreThanOrEqual":
+                    concatSQLString(">=");
                     break;
                 case "or":
+                    concatSQLString("or");
                     break;
                 default:
                     break;
@@ -187,11 +232,37 @@ namespace WpfApp1.form
         #endregion
 
         #region 私有方法
-        private void concatSQLString(string)
+        private void concatSQLString(string sql) 
         {
-
+            textBoxSQL.Text = String.Concat(textBoxSQL.Text, " ", sql);
         }
 
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sql"></param>
+        private  FeatureQueryResult query(string sql)
+        {
+            if (selectedTable == null)
+                return null;
+            QueryParameters qParams = new QueryParameters();
+            qParams.WhereClause = sql.Trim();
+            FeatureQueryResult result = selectedTable.QueryFeaturesAsync(qParams).Result;
+            return result;
+        }
+
+        
+        private void setBusyOverLay(bool visible = true)
+        {
+            if (visible)
+            {
+                BusyOverlay.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BusyOverlay.Visibility = Visibility.Collapsed;
+            }
+        }
         #endregion
 
 

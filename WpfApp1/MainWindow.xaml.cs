@@ -71,7 +71,7 @@ namespace WpfApp1
 
         private Geodatabase myDatbase;
         private IReadOnlyList<GeodatabaseFeatureTable> myTables;
-
+        public static MainWindow mainwindow;
 
         #endregion
 
@@ -352,7 +352,7 @@ namespace WpfApp1
                             //加载成功时的操作
                             initGraphiLayer();
                             initVertexLayer();
-                            
+                            mainwindow = this;
                             break;
                     }
                 }
@@ -1229,6 +1229,7 @@ namespace WpfApp1
                         addFeatureLayerAsync(ly, path);
                         OpenGDB.IsEnabled = false;
                     }
+                    //myDatbase.Close();
                 }
                 catch (Exception ex)
                 {
@@ -1248,6 +1249,8 @@ namespace WpfApp1
             qf.ShowDialog();
         }
 
+
+        private QueryGeoType curQueryGeoType = QueryGeoType.无;
         /// <summary>
         /// 空间查询
         /// </summary>
@@ -1255,7 +1258,17 @@ namespace WpfApp1
         /// <param name="e"></param>
         private void queryByLoc(object sender, RoutedEventArgs e)
         {
+            System.Windows.Controls.MenuItem item = sender as System.Windows.Controls.MenuItem;
+            switch (item.Name)
+            {
+                case "queryByPoint":
+                    curQueryGeoType = QueryGeoType.点;
 
+                    break;
+                case "queryByRec":
+                    curQueryGeoType = QueryGeoType.矩形;
+                    break;
+            }
         }
 
         /// <summary>

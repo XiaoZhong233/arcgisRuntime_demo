@@ -113,6 +113,9 @@
     <Compile Include="form\QueryForm.xaml.cs">
       <DependentUpon>QueryForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="form\QueryResultForm.xaml.cs">
+      <DependentUpon>QueryResultForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocalServerManager.cs" />
     <Compile Include="ViewModel\MyList.cs" />
     <Compile Include="ViewModel\NotifyPropertyBase.cs" />
@@ -132,6 +135,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="form\QueryForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="form\QueryResultForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

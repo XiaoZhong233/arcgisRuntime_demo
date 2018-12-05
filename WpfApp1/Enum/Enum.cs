@@ -18,4 +18,11 @@ namespace WpfApp1.Enum
         缓冲区,
         分割
     }
+
+    public enum QueryGeoType
+    {
+        无,
+        点,
+        矩形
+    }
 }
