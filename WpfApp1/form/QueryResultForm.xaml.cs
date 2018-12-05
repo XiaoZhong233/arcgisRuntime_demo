@@ -21,7 +21,8 @@ namespace WpfApp1.form
     /// </summary>
     public partial class QueryResultForm : Window
     {
-        private FeatureQueryResult featureQuerySet; //查询结果集合
+        private FeatureQueryResult featureQuerySet; //查询结果集合
+
         public FeatureQueryResult FeatureQuerySet { get => featureQuerySet; set => featureQuerySet = value; }
 
         #region 初始化
