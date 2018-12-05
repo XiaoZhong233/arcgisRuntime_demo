@@ -1895,7 +1895,21 @@ namespace WpfApp1
                     case OperationType.查询:
                         if (curQueryGeoType == QueryGeoType.点)
                         {
-
+                            //IReadOnlyList<IdentifyLayerResult> results = await MyMapView.IdentifyLayersAsync(ScreenPos, 15, false);
+                            identifyLayer(ScreenPos, results =>
+                            {
+                                if (locationQueryResultsWindow != null && locationQueryResultsWindow.IsClosed)
+                                {
+                                    locationQueryResultsWindow = null;//将子窗体对象置为空
+                                }
+                                if(locationQueryResultsWindow == null)
+                                {
+                                    locationQueryResultsWindow = new QueryByLocResultForm();
+                                }
+                                locationQueryResultsWindow.ResultCollection = results;
+                                locationQueryResultsWindow.Show();//显示该子窗体
+                                locationQueryResultsWindow.Activate();//使子窗体处于激活状态
+                            });
                         }
                         break;
                     default:
@@ -1903,6 +1917,23 @@ namespace WpfApp1
                 }
             }
 
+        }
+
+
+        private QueryByLocResultForm locationQueryResultsWindow;
+
+        private void identifyLayer(Point pt, Action<IReadOnlyList<IdentifyLayerResult>> action)
+        {
+            identifyLayerAsync(pt,15,action);
+        }
+
+        private async void identifyLayerAsync(Point SrePt,double tolerance,Action<IReadOnlyList<IdentifyLayerResult>> action)
+        {
+            IReadOnlyList<IdentifyLayerResult> results = await MyMapView.IdentifyLayersAsync(SrePt, tolerance, false);
+            if (results != null)
+            {
+                action(results);
+            }
         }
 
 

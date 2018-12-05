@@ -16,8 +16,11 @@
             <RowDefinition Height="211*"/>
         </Grid.RowDefinitions>
 
-        <ComboBox Grid.Column="0" Grid.Row="0" Margin="5"/>
-        <ComboBox Grid.Column="1" Grid.Row="0" Margin="5"/>
+        <ComboBox Name="comboBoxLayer" Grid.Column="0" Grid.Row="0" Margin="5"/>
+        <ComboBox Name="comboBoxRecord" Grid.Column="1" Grid.Row="0" Margin="5"/>
+
+        <DataGrid Name="dataGridContent" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="5"/>
+        
         
     </Grid>
 </Window>
