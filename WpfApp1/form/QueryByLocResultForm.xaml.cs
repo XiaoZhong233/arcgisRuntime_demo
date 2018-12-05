@@ -23,6 +23,7 @@ namespace WpfApp1.form
         private IReadOnlyList<IdentifyLayerResult> resultCollection;//地图识别操作结果集合
         private bool isClosed;//窗体关闭标记
         private IdentifyLayerResult curSelLayer;//当前选择的图层
+        private Feature curFeature; //当前选择要素
 
         public IReadOnlyList<IdentifyLayerResult> ResultCollection { get => resultCollection; set => resultCollection = value; }
         public bool IsClosed { get => isClosed; set => isClosed = value; }
@@ -30,8 +31,11 @@ namespace WpfApp1.form
         public QueryByLocResultForm()
         {
             InitializeComponent();
-            initFormEvent();
+            comboBoxLayer.Visibility = Visibility.Collapsed;
+            comboBoxRecord.Visibility = Visibility.Collapsed;
             initControls();
+            initFormEvent();
+            
         }
 
         private void initFormEvent()
@@ -53,6 +57,11 @@ namespace WpfApp1.form
                         comboBoxRecord.Items.Add(i);//遍历要素集合，为记录组合框添加项
                     }
                     Feature ft = (Feature)geoElements.First();//取得要素集合中第一个要素
+                    curFeature = ft;
+                    ft.FeatureTable.FeatureLayer.ClearSelection();
+                    ft.FeatureTable.FeatureLayer.SelectionColor = System.Drawing.Color.Red;
+                    ft.FeatureTable.FeatureLayer.SelectionWidth = 20;
+                    ft.FeatureTable.FeatureLayer.SelectFeature(ft);
                     dataGridContent.AutoGenerateColumns = true;//数据格网对象自动生成列
                     dataGridContent.ItemsSource = ft.Attributes;//设置数据格网中项的数据源
                 }
@@ -61,6 +70,10 @@ namespace WpfApp1.form
             this.Closed += (s, e) =>
             {
                 IsClosed = true;
+                if (curFeature != null)
+                {
+                    curFeature.FeatureTable.FeatureLayer.ClearSelection();
+                }
             };
             
         }
