@@ -57,8 +57,9 @@
         <!--菜单栏-->
         <Menu x:Name="menu" Height="25" VerticalAlignment="Top" Grid.ColumnSpan="3" Margin="0,0,-0.4,0" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
             <MenuItem Header=" 文件" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" Width="45">
-                <MenuItem Header="打开..." Click="openFile_click" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+                <MenuItem Header="打开..." Click="openShapefile_click" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
                 <MenuItem Header="openLocalGeoDatabase" Name="OpenGDB" Click="openLocalGeoDBAsync" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+                <MenuItem Header="打开栅格" Click="opentif" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
                 
             </MenuItem>
             <MenuItem Header="底图"   >
@@ -79,6 +80,16 @@
 
             </MenuItem>
 
+            <MenuItem Header="栅格渲染">
+                <MenuItem Name="hillshade" Header="Hillshade" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+                <MenuItem Name="blend" Header="Blend" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+                <MenuItem Name="strepth" Header="Strepth" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+                <MenuItem Name="rgb" Header="RGB" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+                <MenuItem Name="colorMap" Header="ColorMap" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+            </MenuItem>
+            
+            
+            
             <MenuItem Header="绘制">
                 <MenuItem Name="drawPoint" Header="绘制点" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onDrawPointItemClick"/>
                 <MenuItem Name="drawLine" Header="绘制线" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="onDrawLineItemClick"/>
@@ -103,7 +114,10 @@
             </MenuItem>
 
             <MenuItem Header="查询">
-                <MenuItem Name="queryByAttribute" Header="属性查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByAtb"/>
+                <MenuItem  Header="属性查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键">
+                    <MenuItem Name="queryByAttribute" Header="GeoDataBase图层查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByAtb"/>
+                    <MenuItem Name="querySfByAttribute" Header="矢量图层查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="querySfByAtb"/>
+                </MenuItem>
                 <MenuItem Name="queryByLocation" Header="空间查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByLoc" >
                     <MenuItem Name="queryByPt" Header="按点查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByLoc" />
                     <MenuItem Name="queryByRec" Header="按矩形查询" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="queryByLoc" />
@@ -128,13 +142,13 @@
 
             <TreeView.ItemTemplate >
                 <HierarchicalDataTemplate DataType="{x:Type local:PropertyNodeItem}" ItemsSource="{Binding Path=Children}" >
-                    <StackPanel Orientation="Horizontal" Margin="0,20,10,0" Width="300">
+                    <StackPanel Orientation="Horizontal" Margin="0,20,10,0" Width="300" Name="stackPanel">
                         <!--每一个item的布局-->
-                        <CheckBox VerticalAlignment="Center" Margin="0,0,10,2" IsChecked="{Binding IsChecked }" Checked="onChecked" Unchecked="onUnChecked"/>
+                        <CheckBox Name="ckb" VerticalAlignment="Center" Margin="0,0,10,2" IsChecked="{Binding IsChecked }" Checked="onChecked" Unchecked="onUnChecked"/>
                         <Image VerticalAlignment="Center" Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,2,2"/>
                         <TextBlock VerticalAlignment="Center" Text="{Binding DisplayName}"/>
                         <StackPanel.ContextMenu>
-                            <ContextMenu>
+                            <ContextMenu  Name="rbt_cm">
                                 <MenuItem Name="rename" Header="重命名" Click="onRenameItemClick"/>
                                 <MenuItem Name="remove" Header="移除图层" Click="onRemoveItemClick"/>
                                 <MenuItem Name="properity" Header="属性表" Click="onProperityClick"/>

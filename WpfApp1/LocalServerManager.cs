@@ -19,19 +19,19 @@ namespace WpfApp1
     public class LocalServerManager
     {
         private MainWindow mainWindow;
-        private Esri.ArcGISRuntime.LocalServices.LocalServer localServer;
+        public static  Esri.ArcGISRuntime.LocalServices.LocalServer localServer;
 
         private LocalGeoprocessingService gpService;
         private GeoprocessingTask gpTask;
         private GeoprocessingJob gpJob;
-        private string path = @"E:\Desktop\学习\大三上\GIS课程设计\gpk\ClustersOutliers.gpk";
+        private string path = @"E:\Desktop\Select.gpk";
 
 
         public LocalServerManager(MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
-            //init();
-            //initGPService();
+            init();
+            initGPService();
         }
 
         public void init()
@@ -80,7 +80,7 @@ namespace WpfApp1
                     if (args.Status == LocalServerStatus.Started)
                     {
                         // Get the URL for the specific geoprocessing tool
-                        var gpSvcUrl = (svc as LocalGeoprocessingService).Url.AbsoluteUri + "/MessageInABottle";
+                        var gpSvcUrl = (svc as LocalGeoprocessingService).Url.AbsoluteUri+ "\\Select.gpk";
 
                         // Create the geoprocessing task
                         gpTask = new GeoprocessingTask(new Uri(gpSvcUrl));
@@ -88,6 +88,7 @@ namespace WpfApp1
 
                         // Create parameters, run the task, process results, etc.
                         // ...
+                        generateResult();
                     }
                 };
             }
@@ -110,7 +111,7 @@ namespace WpfApp1
             if (statusChangedEventArgs.Status != LocalServerStatus.Started) return;
 
             // Create the geoprocessing task from the service
-            gpTask = await GeoprocessingTask.CreateAsync(new Uri(gpService.Url + "/ClustersOutliers"));
+            gpTask = await GeoprocessingTask.CreateAsync(new Uri(gpService.Url+""));
         }
 
         private void generateResult()

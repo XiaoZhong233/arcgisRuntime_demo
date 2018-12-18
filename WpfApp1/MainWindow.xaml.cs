@@ -2,6 +2,7 @@
 using Esri.ArcGISRuntime.Data;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Mapping;
+using Esri.ArcGISRuntime.Rasters;
 using Esri.ArcGISRuntime.Symbology;
 using Esri.ArcGISRuntime.Tasks;
 using Esri.ArcGISRuntime.Tasks.Offline;
@@ -24,6 +25,7 @@ using System.Windows.Media;
 using System.Windows.Navigation;
 using WpfApp1.Enum;
 using WpfApp1.form;
+using WpfApp1.form.Query;
 using WpfApp1.ViewModel;
 
 namespace WpfApp1
@@ -39,6 +41,8 @@ namespace WpfApp1
         //保管结点列表
         private Dictionary<string, PropertyNodeItem> layersMap = new Dictionary<string, PropertyNodeItem>();
         private List<String> fileNames = new List<string>();
+        //栅格数据列表
+        public List<RasterLayer> rasterLayers = new List<RasterLayer>();
         //图层树数据源
         List<PropertyNodeItem> itemList = new List<PropertyNodeItem>();
         //当前激活的底图菜单项
@@ -219,7 +223,9 @@ namespace WpfApp1
         {
             vertexLayer = new GraphicsOverlay();
             MyMapView.GraphicsOverlays.Add(vertexLayer);
+#pragma warning disable CS0618 // 类型或成员已过时
             vertexLayer.SelectionColor = System.Drawing.Color.Red;
+#pragma warning restore CS0618 // 类型或成员已过时
             vertexLayer.Graphics.CollectionChanged += (s, e) =>
             {
                 NotifyCollectionChangedEventArgs args = e as NotifyCollectionChangedEventArgs;
@@ -1018,9 +1024,9 @@ namespace WpfApp1
         }
 
         /// <summary>
-        /// 将矢量要素图层加入地图，更新至图层树控件
+        /// 将图层加入地图，更新至图层树控件
         /// </summary>
-        private async void addFeatureLayerAsync(FeatureLayer featureLayer, string file)
+        private async void addLayerAsync(Layer featureLayer, string file)
         {
             //打开文件
             MyMapView.Map.OperationalLayers.Add(featureLayer);
@@ -1080,11 +1086,61 @@ namespace WpfApp1
 
 
         /// <summary>
+        /// 打开栅格文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void opentif(object sender, RoutedEventArgs e)
+        {
+            DialogResult result;
+
+            String[] files;
+            //Shapefile shapefile = new Shapefile();
+
+            using (OpenFileDialog openDialog = new OpenFileDialog())
+            {
+
+                openDialog.Multiselect = true;
+                openDialog.InitialDirectory = @"c:/";
+                openDialog.Filter = "栅格数据集|*.tif";//定义文件筛选器,只显示扩展名为.shp的文件；
+                openDialog.Title = "请打开栅格数据集";
+                result = openDialog.ShowDialog();//返回用户选择
+                openDialog.RestoreDirectory = true;//关闭前对话框恢复当前目录
+                files = openDialog.FileNames;//保存选中文件路径
+            }
+            foreach (String file in files)
+            {
+                addRaster(file);
+            }
+
+
+        }
+
+        /// <summary>
+        /// 往操作图层中加入栅格数据集
+        /// </summary>
+        /// <param name="path"></param>
+        private async void addRaster(string path)
+        {
+            if (path.EndsWith(".tif"))
+            {
+                Raster myRaster = new Raster(path);
+                await myRaster.LoadAsync();
+                RasterLayer RasterLayer = new RasterLayer(myRaster);
+                rasterLayers.Add(RasterLayer);
+                addLayerAsync(RasterLayer, path);
+
+                //MyMapView.Map.OperationalLayers.Add(RasterLayer);
+                //await MyMapView.SetViewpointGeometryAsync(RasterLayer.FullExtent);
+            }
+        }
+        
+        /// <summary>
         /// 打开文件，仅支持shapefile格式
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void openFile_click(object sender, RoutedEventArgs e)
+        private async void openShapefile_click(object sender, RoutedEventArgs e)
         {
             DialogResult result;
 
@@ -1116,64 +1172,7 @@ namespace WpfApp1
                         
                         if (MyMapView != null)
                         {
-                            addFeatureLayerAsync(featureLayer, file);
-                            ////打开文件
-                            //MyMapView.Map.OperationalLayers.Add(featureLayer);
-                            //await MyMapView.SetViewpointGeometryAsync(featureLayer.FullExtent);
-
-                            //string directoryName = Path.GetDirectoryName(file);//截取出除去文件类型的路径名
-                            //string fileName = Path.GetFileNameWithoutExtension(file);//文件名
-
-                            ////更新图层树
-
-                            //PropertyNodeItem root = null;
-                            //if(layersMap.TryGetValue(directoryName,out root))
-                            //{
-
-                            //    PropertyNodeItem node = new PropertyNodeItem(file, fileName,featureLayer,root);
-                            //    node.Icon = @"\Resouces\data_ic.png";
-                            //    //如果已经有该文件，直接返回
-                            //    if (fileNames.Contains(fileName))
-                            //    {
-                            //        //在操作图层中移除该图层，为了和图层树保持一致,不可以有重复的图层
-                            //        MyMapView.Map.OperationalLayers.Remove(featureLayer);
-                            //        return;
-                            //    }
-                            //    fileNames.Add(fileName);
-                            //    //将图层加入到父节点保存的列表中
-                            //    List<Layer> layers = root.layers;
-                            //    layers.Add(featureLayer);
-                            //    //将子节点加入父节点中
-
-                            //    root.Children.Add(node);
-                            //}
-                            ////需要新建父节点
-                            //else
-                            //{
-                            //    //新建父节点
-                            //    List<Layer> layers = new List<Layer>();
-                            //    layers.Add(featureLayer);
-                            //    root = new PropertyNodeItem(directoryName, directoryName,layers);
-                            //    root.Icon = @"\Resouces\data_ic.png";
-
-                            //    layersMap.Add(directoryName, root);
-                            //    //新建子节点
-                            //    fileNames.Add(fileName);
-                            //    PropertyNodeItem childNode = new PropertyNodeItem(file, fileName, featureLayer,root);
-                            //    childNode.Icon = @"\Resouces\data_ic.png";
-                            //    //将子节点加入父节点中
-                            //    root.Children.Add(childNode);
-
-                            //}
-                            //if (!itemList.Contains(root))
-                            //{
-                            //    itemList.Add(root);
-                            //}
-
-                            //this.layerTreeView.ItemsSource = itemList;
-                            //layerTreeView.Items.Refresh();
-
-
+                            addLayerAsync(featureLayer, file);
                         }
                     }
                     else if (Regex.IsMatch(file, "^.*(.mdb)$"))
@@ -1226,7 +1225,7 @@ namespace WpfApp1
                         await t.LoadAsync();
                         FeatureLayer ly = new FeatureLayer(t);//构造要素图层 
                         //MyMapView.Map.OperationalLayers.Add(ly); //添加图层到地图控件中
-                        addFeatureLayerAsync(ly, path);
+                        addLayerAsync(ly, path);
                         OpenGDB.IsEnabled = false;
                     }
                     //myDatbase.Close();
@@ -1236,6 +1235,13 @@ namespace WpfApp1
                     System.Windows.MessageBox.Show(ex.ToString());
                 }
             }
+        }
+
+
+        private void querySfByAtb(object sender, RoutedEventArgs e)
+        {
+            QueryShapeFileByAttr qsf = new QueryShapeFileByAttr(itemList);
+            qsf.ShowDialog();
         }
 
         /// <summary>
@@ -1293,6 +1299,41 @@ namespace WpfApp1
 
 
         #region 图层树事件处理
+
+        /// <summary>
+        /// 根据条件获取模板下的控件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parent"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public T GetVisualChild<T>(DependencyObject parent, Func<T, bool> predicate) where T : Visual
+        {
+            int numVisuals = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < numVisuals; i++)
+            {
+                DependencyObject v = (DependencyObject)VisualTreeHelper.GetChild(parent, i);
+                T child = v as T;
+                if (child == null)
+                {
+                    child = GetVisualChild<T>(v, predicate);
+                    if (child != null)
+                    {
+                        return child;
+                    }
+                }
+                else
+                {
+                    if (predicate(child))
+                    {
+                        return child;
+                    }
+                }
+            }
+            return null;
+        }
+
+
         /// <summary>
         /// 图层树节点右键事件
         /// </summary>
@@ -1310,6 +1351,20 @@ namespace WpfApp1
                     {
                         System.Windows.MessageBox.Show("右击 "+dataContext.DisplayName + "");
                     }
+                    //TODO:根据不同类型的图层显示不同的菜单
+                    if (dataContext.layer != null)
+                    {
+                        if (dataContext.layer is FeatureLayer)
+                        {
+                            
+                        }
+                        else if(dataContext.layer is RasterLayer)
+                        {
+
+                        }
+                    }
+
+
                     treeViewItem.Focus();
                     e.Handled = true;
                 }
@@ -1355,22 +1410,22 @@ namespace WpfApp1
                     if (dataContext.nodeType == PropertyNodeItem.NodeType.LeafNode)
                     {
                        
-                        FeatureLayer featureLayer = dataContext.layer as FeatureLayer;
-                        if (featureLayer != null)
+                        //FeatureLayer featureLayer = dataContext.layer as FeatureLayer;
+                        if (dataContext.layer != null)
                         {
-                            featureLayer.IsVisible = true;
+                            dataContext.layer.IsVisible = true;
                         }
                     }
                     //父节点
                     else
                     {
                         //遍历父节点下的子节点并对其进行操作
-                        PropertyNodeItem.traveseNode(dataContext, x =>
+                        PropertyNodeItem.traverseNode(dataContext, x =>
                         {
-                            FeatureLayer featureLayer = x.layer as FeatureLayer;
-                            if (featureLayer != null)
+                            //FeatureLayer featureLayer = x.layer as FeatureLayer;
+                            if (dataContext.layer != null)
                             {
-                                featureLayer.IsVisible = true;
+                                dataContext.layer.IsVisible = true;
                             }
                         });
                     }
@@ -1401,22 +1456,22 @@ namespace WpfApp1
                     //如果是子节点
                     if(dataContext.nodeType == PropertyNodeItem.NodeType.LeafNode)
                     {
-                        FeatureLayer featureLayer = dataContext.layer as FeatureLayer;
-                        if (featureLayer != null)
+                        //FeatureLayer featureLayer = dataContext.layer as FeatureLayer;
+                        if (dataContext.layer != null)
                         {
-                            featureLayer.IsVisible = false;
+                            dataContext.layer.IsVisible = false;
                         }
                     }
                     //如果是父节点
                     else
                     {
                         //遍历父节点下的子节点并对其进行操作
-                        PropertyNodeItem.traveseNode(dataContext, x =>
+                        PropertyNodeItem.traverseNode(dataContext, x =>
                         {
-                            FeatureLayer featureLayer = x.layer as FeatureLayer;
-                            if (featureLayer != null)
+                            //FeatureLayer featureLayer = x.layer as FeatureLayer;
+                            if (dataContext.layer != null)
                             {
-                                featureLayer.IsVisible = false;
+                                dataContext.layer.IsVisible = false;
                             }
                         });
                     }
@@ -1440,6 +1495,8 @@ namespace WpfApp1
                     layersMap.Remove(layerNode.parent.DisplayName);
                     //treeView数据源移除
                     itemList.Remove(layerNode.parent);
+                    //
+                    rasterLayers.Remove(layerNode.layer as RasterLayer);
 
                 }
                 else
@@ -1452,7 +1509,8 @@ namespace WpfApp1
                     //把当前节点保存路径名的map进行移除
                     fileNames.Remove(layerNode.DisplayName);
                     //treeView数据源移除
-                    //itemList.Remove(layerNode);
+                    //itemList.Remove(layerNode)
+                    rasterLayers.Remove(layerNode.layer as RasterLayer); ;
                 }
 
                 
@@ -1461,13 +1519,14 @@ namespace WpfApp1
             else if(layerNode.nodeType == PropertyNodeItem.NodeType.RootNode)
             {
                 //遍历该结点下的所有节点
-                PropertyNodeItem.traveseNode(layerNode, x =>
+                PropertyNodeItem.traverseNode(layerNode, x =>
                 {
                     //如果是子节点
                     if (x.nodeType == PropertyNodeItem.NodeType.LeafNode)
                     {
                         MyMapView.Map.OperationalLayers.Remove(x.layer);
                         fileNames.Remove(x.DisplayName);
+                        rasterLayers.Remove(x.layer as RasterLayer);
                         //itemList.Remove(x);
                     }
                     else if(x.nodeType == PropertyNodeItem.NodeType.RootNode)
@@ -1511,7 +1570,7 @@ namespace WpfApp1
                     }
                     System.Windows.MessageBox.Show(String.Format("被移除结点的名称：{0}\n 当前tv中的数据个数：{1}\n" +
                         "当前保存的目录个数：{2}\n 当前保存的文件路径个数：{3}\n 第一个父节点的子节点数：{4}\n" +
-                        "移除的节点的深度：{5}",dataContext.Name,itemList.Count,layersMap.Count,fileNames.Count, num,dataContext.Level));
+                        "移除的节点的深度：{5}\n栅格图层数：{6}",dataContext.Name,itemList.Count,layersMap.Count,fileNames.Count, num,dataContext.Level,rasterLayers.Count));
                 }
                 
             }

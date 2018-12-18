@@ -15,7 +15,7 @@ namespace WpfApp1
     //
     //图层控制树 节点模板
     //
-    class PropertyNodeItem : NotifyPropertyBase
+    public class PropertyNodeItem : NotifyPropertyBase
     {
         public string Icon { get; set; }
         public string DisplayName { get; set; }
@@ -26,6 +26,8 @@ namespace WpfApp1
         public List<Layer> layers = new List<Layer>();
         private bool isChecked;
         private int level;
+
+        
 
         public int Level
         {
@@ -57,7 +59,7 @@ namespace WpfApp1
                         
                         foreach(PropertyNodeItem child in this.Children)
                         {
-                            traveseNode(child, x => {
+                            traverseNode(child, x => {
                                 x.IsChecked = this.IsChecked;
                                 //通知更改
                                 x.OnPropertyChanged("isChecked");
@@ -73,16 +75,23 @@ namespace WpfApp1
         /// </summary>
         /// <param name="node"></param>
         /// <param name="action"></param>
-        public static  void traveseNode(PropertyNodeItem node,Action<PropertyNodeItem> action)
+        public static void traverseNode(PropertyNodeItem node,Action<PropertyNodeItem> action)
         {
             foreach(PropertyNodeItem child in node.Children)
             {
-                traveseNode(child,action);
+                traverseNode(child,action);
             }
             action(node);
         }
 
-        
+        public static void traverseNode(List<PropertyNodeItem> items, Action<PropertyNodeItem> action)
+        {
+            foreach(PropertyNodeItem child in items)
+            {
+                traverseNode(child, action);
+            }
+        }
+            
 
         //根节点构造函数
         public PropertyNodeItem(String name,String displayName, List<Layer>  layers)
