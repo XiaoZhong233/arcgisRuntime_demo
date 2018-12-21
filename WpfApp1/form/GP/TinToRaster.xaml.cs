@@ -42,7 +42,7 @@ namespace WpfApp1.form.GP
         {
             Map map = new Map(Basemap.CreateTopographic());
             string pathToRaster = @"E:\Desktop\ExecuteGPK\LasVegasNED13_geoid1.tif";
-            var myRaster = new Raster(pathToRaster);
+            var myRaster = new Esri.ArcGISRuntime.Rasters.Raster(pathToRaster);
             // create a RasterLayer using the Raster
             var newRasterLayer = new RasterLayer(myRaster);
             map.OperationalLayers.Add(newRasterLayer);

@@ -82,7 +82,7 @@
 
             <MenuItem Header="栅格渲染">
                 <MenuItem Name="hillshade" Header="Hillshade" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
-                <MenuItem Name="blend" Header="Blend" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
+                <MenuItem Name="blend" Header="Blend" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键" Click="blend_Click"/>
                 <MenuItem Name="strepth" Header="Strepth" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
                 <MenuItem Name="rgb" Header="RGB" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>
                 <MenuItem Name="colorMap" Header="ColorMap" HorizontalAlignment="Left" IsChecked="False" InputGestureText="无快捷键"/>

@@ -1124,7 +1124,7 @@ namespace WpfApp1
         {
             if (path.EndsWith(".tif"))
             {
-                Raster myRaster = new Raster(path);
+                Esri.ArcGISRuntime.Rasters.Raster myRaster = new Esri.ArcGISRuntime.Rasters.Raster(path);
                 await myRaster.LoadAsync();
                 RasterLayer RasterLayer = new RasterLayer(myRaster);
                 rasterLayers.Add(RasterLayer);
@@ -2367,7 +2367,16 @@ namespace WpfApp1
         }
 
 
+        #region 栅格处理
 
+        //栅格渲染
+        private void blend_Click(object sender, RoutedEventArgs e)
+        {
+            if(rasterLayers.Count>0)
+            RasterManager.blendRender(rasterLayers.First());
+        }
+
+        #endregion
 
 
         #endregion
@@ -2379,6 +2388,8 @@ namespace WpfApp1
         }
 
         #endregion
+
+  
     }
  
 

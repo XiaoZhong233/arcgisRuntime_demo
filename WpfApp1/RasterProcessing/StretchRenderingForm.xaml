@@ -7,38 +7,38 @@
         mc:Ignorable="d"
         Title="StretchRenderingForm" Height="318" Width="504"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
-        WindowStyle="ToolWindow" BorderThickness="1" Loaded="StretchRenderingWindow_Loaded">
+        WindowStyle="ToolWindow" BorderThickness="1" >
     
     <Grid>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left"
             Margin="10,24,0,0" TextWrapping="Wrap" Text="Stretch Type" VerticalAlignment="Top" FontSize="14"/>
         <ComboBox x:Name="comboBoxStretchType" HorizontalAlignment="Left"
             Margin="120,24,0,0" VerticalAlignment="Top" Width="360"
-            SelectionChanged="ComboBoxStretchType_SelectionChanged"/>
+            />
         <TextBlock x:Name="textBlockMin" HorizontalAlignment="Left"
             Margin="10,79,0,0" TextWrapping="Wrap" Text="MinValue:0"
             VerticalAlignment="Top" FontSize="14"/>
         <Slider x:Name="sliderMinValue" HorizontalAlignment="Left"
             Margin="120,79,0,0" VerticalAlignment="Top" Width="360" Maximum="255"
-            ValueChanged="SliderMinValue_ValueChanged"/>
+            />
         <TextBlock x:Name="textBlockMax" HorizontalAlignment="Left"
             Margin="10,138,0,0" TextWrapping="Wrap" Text="MaxValue:0"
             VerticalAlignment="Top" FontSize="14"/>
         <Slider x:Name="sliderMaxValue" HorizontalAlignment="Left"
             Margin="120,138,0,0" VerticalAlignment="Top" Width="360" Maximum="255"
-            ValueChanged="SliderMaxValue_ValueChanged"/>
+            />
         <TextBlock x:Name="textBlockDevFactor" HorizontalAlignment="Left"
             Margin="10,200,0,0" TextWrapping="Wrap" Text="standard deviation factor:0.25"
             VerticalAlignment="Top" FontSize="14"/>
         <Slider x:Name="sliderDevFactor" HorizontalAlignment="Left"
             Margin="225,200,0,0" VerticalAlignment="Top" Width="255" Maximum="4"
-            Minimum="0.25" ValueChanged="SliderDevFactor_ValueChange"/>
+            />
         <Button x:Name="buttonOK" Content="OK" HorizontalAlignment="Left"
             Margin="85,253,0,0" VerticalAlignment="Top" Width="75" FontSize="14"
-            Click="ButtonOK_Click"/>
+            />
         <Button x:Name="buttonCancel" Content="Cancel"
             HorizontalAlignment="Left" Margin="320,253,0,0" VerticalAlignment="Top"
-            Width="75" FontSize="14" Click="ButtonCancel_Click"/>
+            Width="75" FontSize="14"/>
         
     </Grid>
 </Window>

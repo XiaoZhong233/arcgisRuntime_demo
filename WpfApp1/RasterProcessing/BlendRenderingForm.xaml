@@ -7,37 +7,37 @@
         mc:Ignorable="d"
         Title="BlendRenderingForm" Height="343" Width="509"
         BorderThickness="1" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
-        WindowStyle="ToolWindow" Loaded="BlendRenderingWnd_Loaded">
+        WindowStyle="ToolWindow">
     <Grid>
-        <Label x:Name="altitudeLabel" Content="Altitude:0"
+        <Label x:Name="altitudeLabel" Content="太阳高度角:0"
                 HorizontalAlignment="Left" Margin="14,20,0,0" VerticalAlignment="Top"
                 Width="95" FontSize="14"/>
         <Slider x:Name="sliderAltitude" HorizontalAlignment="Left"
                 Margin="120,24,0,0" VerticalAlignment="Top" Width="360" Maximum="90"
-                ValueChanged="SliderAltitude_ValueChanged"/>
-        <Label x:Name="azimuthLabel" Content="Azimuth:0"
+                />
+        <Label x:Name="azimuthLabel" Content="太阳方位角:0"
                 HorizontalAlignment="Left" Margin="14,71,0,0" VerticalAlignment="Top"
                 Width="95" FontSize="14"/>
         <Slider x:Name="sliderAzimuth" HorizontalAlignment="Left"
                 Margin="120,75,0,0" VerticalAlignment="Top" Width="360" Maximum="360"
-                ValueChanged="SliderAzimuth_ValueChanged"/>
-        <Label x:Name="labelSlopeType" Content="Slope Type"
+                />
+        <Label x:Name="labelSlopeType" Content="坡度类型"
                 HorizontalAlignment="Left" Margin="14,129,0,0" VerticalAlignment="Top"
                 RenderTransformOrigin="0.9,-0.192" FontSize="14"/>
         <ComboBox x:Name="comboBoxSlopeType" HorizontalAlignment="Left"
                 Margin="120,129,0,0" VerticalAlignment="Top" Width="360" Height="28"
-                SelectionChanged="ComboBoxSlopeType_SelectionChange"/>
-        <Label x:Name="labelColorRamp" Content="Color Ramp"
+                />
+        <Label x:Name="labelColorRamp" Content="颜色条带"
                 HorizontalAlignment="Left" Margin="14,196,0,0" VerticalAlignment="Top"
                 RenderTransformOrigin="0.9,-0.192" FontSize="14"/>
         <ComboBox x:Name="comboBoxColorRamp" HorizontalAlignment="Left"
                 Margin="120,196,0,0" VerticalAlignment="Top" Width="360" Height="28"
-                SelectionChanged="ComboBoxColorRamp_SelectionChange"/>
-        <Button x:Name="buttonOK" Content="OK" HorizontalAlignment="Left"
+                />
+        <Button x:Name="buttonOK" Content="确定" HorizontalAlignment="Left"
                 Margin="92,270,0,0" VerticalAlignment="Top" Width="116" Height="30"
-                FontSize="14" Click="ButtonOK_Click"/>
-        <Button x:Name="buttonCancel" Content="Cancel"
+                FontSize="14" />
+        <Button x:Name="buttonCancel" Content="取消"
                 HorizontalAlignment="Left" Margin="282,270,0,0" VerticalAlignment="Top"
-                Width="116" Height="30" FontSize="14" Click="ButtonCancel_Click"/>
+                Width="116" Height="30" FontSize="14" />
     </Grid>
 </Window>

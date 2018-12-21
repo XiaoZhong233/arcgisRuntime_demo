@@ -55,7 +55,8 @@ namespace WpfApp1.form.GP
                             GeoprocessingResult geoprocessingResult = await gpJob.GetResultAsync();
                             GeoprocessingRaster resultRaster = geoprocessingResult.Outputs["flowArea"] as GeoprocessingRaster;
                             string pathToRaster = resultRaster.Source.AbsolutePath;
-                            var myRaster = new Raster(pathToRaster);
+                            var myRaster = new Esri.ArcGISRuntime.Rasters.Raster(pathToRaster);
+                            
                             var newRasterLayer = new RasterLayer(myRaster);
                             MainWindow.mainwindow.MyMapView.Map.OperationalLayers.Add(newRasterLayer);
                             await MainWindow.mainwindow.MyMapView.SetViewpointGeometryAsync(newRasterLayer.FullExtent);
