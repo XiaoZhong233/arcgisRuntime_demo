@@ -43,9 +43,6 @@
     <Reference Include="Esri.ArcGISRuntime.LocalServices, Version=100.3.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <HintPath>..\packages\Esri.ArcGISRuntime.LocalServices.100.3.0.1\lib\net461\Esri.ArcGISRuntime.LocalServices.dll</HintPath>
     </Reference>
-    <Reference Include="Esri.ArcGISRuntime.Toolkit, Version=100.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Esri.ArcGISRuntime.Toolkit.100.4.0\lib\net461\Esri.ArcGISRuntime.Toolkit.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -95,6 +92,7 @@
     <Compile Include="form\GP\TinToRaster.xaml.cs">
       <DependentUpon>TinToRaster.xaml</DependentUpon>
     </Compile>
+    <Compile Include="form\GP\Watersh.cs" />
     <Compile Include="form\LineSymbolForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +131,9 @@
     </Compile>
     <Compile Include="form\Query\QueryShapeFileByAttr.xaml.cs">
       <DependentUpon>QueryShapeFileByAttr.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="form\SelectGP.xaml.cs">
+      <DependentUpon>SelectGP.xaml</DependentUpon>
     </Compile>
     <Compile Include="LocalServerManager.cs" />
     <Compile Include="RasterManager.cs" />
@@ -176,6 +177,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="form\Query\QueryShapeFileByAttr.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="form\SelectGP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -274,8 +279,12 @@
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Esri.ArcGISRuntime.LocalServices.100.3.0.1\build\net461\Esri.ArcGISRuntime.LocalServices.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Esri.ArcGISRuntime.LocalServices.100.3.0.1\build\net461\Esri.ArcGISRuntime.LocalServices.targets'))" />
+    <Error Condition="!Exists('..\packages\Esri.ArcGISRuntime.10.2.7.1234\build\net45\Esri.ArcGISRuntime.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Esri.ArcGISRuntime.10.2.7.1234\build\net45\Esri.ArcGISRuntime.targets'))" />
     <Error Condition="!Exists('..\packages\Esri.ArcGISRuntime.WPF.100.4.0\build\net461\Esri.ArcGISRuntime.WPF.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Esri.ArcGISRuntime.WPF.100.4.0\build\net461\Esri.ArcGISRuntime.WPF.targets'))" />
+    <Error Condition="!Exists('..\packages\Esri.ArcGISRuntime.Toolkit.10.2.7.1234\build\net45\Esri.ArcGISRuntime.Toolkit.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Esri.ArcGISRuntime.Toolkit.10.2.7.1234\build\net45\Esri.ArcGISRuntime.Toolkit.targets'))" />
   </Target>
   <Import Project="..\packages\Esri.ArcGISRuntime.LocalServices.100.3.0.1\build\net461\Esri.ArcGISRuntime.LocalServices.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.LocalServices.100.3.0.1\build\net461\Esri.ArcGISRuntime.LocalServices.targets')" />
+  <Import Project="..\packages\Esri.ArcGISRuntime.10.2.7.1234\build\net45\Esri.ArcGISRuntime.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.10.2.7.1234\build\net45\Esri.ArcGISRuntime.targets')" />
   <Import Project="..\packages\Esri.ArcGISRuntime.WPF.100.4.0\build\net461\Esri.ArcGISRuntime.WPF.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.WPF.100.4.0\build\net461\Esri.ArcGISRuntime.WPF.targets')" />
+  <Import Project="..\packages\Esri.ArcGISRuntime.Toolkit.10.2.7.1234\build\net45\Esri.ArcGISRuntime.Toolkit.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.Toolkit.10.2.7.1234\build\net45\Esri.ArcGISRuntime.Toolkit.targets')" />
 </Project>
