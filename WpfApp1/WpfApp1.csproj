@@ -40,9 +40,6 @@
     <Reference Include="Esri.ArcGISRuntime, Version=100.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <HintPath>..\packages\Esri.ArcGISRuntime.WPF.100.4.0\lib\net461\Esri.ArcGISRuntime.dll</HintPath>
     </Reference>
-    <Reference Include="Esri.ArcGISRuntime.LocalServices, Version=100.3.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
-      <HintPath>..\packages\Esri.ArcGISRuntime.LocalServices.100.3.0.1\lib\net461\Esri.ArcGISRuntime.LocalServices.dll</HintPath>
-    </Reference>
     <Reference Include="Esri.ArcGISRuntime.Toolkit, Version=100.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Esri.ArcGISRuntime.Toolkit.100.4.0\lib\net461\Esri.ArcGISRuntime.Toolkit.dll</HintPath>
     </Reference>
@@ -92,9 +89,6 @@
     <Compile Include="form\LineSymbolForm.Designer.cs">
       <DependentUpon>LineSymbolForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="form\LocalServerGeoprocessing.xaml.cs">
-      <DependentUpon>LocalServerGeoprocessing.xaml</DependentUpon>
-    </Compile>
     <Compile Include="form\PointSymbolForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,7 +116,6 @@
     <Compile Include="form\QueryResultForm.xaml.cs">
       <DependentUpon>QueryResultForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LocalServerManager.cs" />
     <Compile Include="ViewModel\MyList.cs" />
     <Compile Include="ViewModel\NotifyPropertyBase.cs" />
     <Compile Include="ViewModel\PropertyNodeItem.cs" />
@@ -133,10 +126,6 @@
       <DependentUpon>properityForm.xaml</DependentUpon>
     </Compile>
     <Page Include="form\AnalyzeHotspots.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="form\LocalServerGeoprocessing.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

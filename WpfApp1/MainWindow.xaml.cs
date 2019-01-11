@@ -67,7 +67,7 @@ namespace WpfApp1
         private Graphic cutter; //分割要素
         private Graphic cuttedGraphic;//被分割的要素
 
-        private LocalServerManager localServer;
+        //private LocalServerManager localServer;
 
         private Geodatabase myDatbase;
         private IReadOnlyList<GeodatabaseFeatureTable> myTables;
@@ -181,7 +181,7 @@ namespace WpfApp1
                 complete_btn.Visibility = Visibility.Hidden;
             };
 
-            localServer = new LocalServerManager(this);
+            //localServer = new LocalServerManager(this);
         }
 
         /// <summary>
