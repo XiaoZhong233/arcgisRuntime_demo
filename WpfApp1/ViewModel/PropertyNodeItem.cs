@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace WpfApp1
 {
@@ -20,12 +21,15 @@ namespace WpfApp1
         public string Icon { get; set; }
         public string DisplayName { get; set; }
         public string Name { get; set; }
+        public BitmapImage Legend { get; set; }
         public PropertyNodeItem parent { get; set; }
         public NodeType nodeType;
         public Layer layer;
         public List<Layer> layers = new List<Layer>();
         private bool isChecked;
         private int level;
+
+
 
         public int Level
         {
@@ -82,7 +86,42 @@ namespace WpfApp1
             action(node);
         }
 
-        
+        /// <summary>
+        /// 寻找某个节点
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static PropertyNodeItem findNode(PropertyNodeItem root,Predicate<PropertyNodeItem> predicate)
+        {
+            foreach(PropertyNodeItem child in root.Children)
+            {
+                if (predicate(child))
+                    return child;
+                else
+                    findNode(child, predicate);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 寻找某个节点
+        /// </summary>
+        /// <param name="roots"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static PropertyNodeItem findNode(List<PropertyNodeItem> roots, Predicate<PropertyNodeItem> predicate)
+        {
+            PropertyNodeItem result = null;
+            foreach (PropertyNodeItem root in roots)
+            {
+                result = findNode(root, predicate);
+                if (result != null)
+                    break;
+            }
+            return result;
+        }
+
 
         //根节点构造函数
         public PropertyNodeItem(String name,String displayName, List<Layer>  layers)
@@ -108,6 +147,20 @@ namespace WpfApp1
             this.parent = parent;
             this.level = this.parent.level + 1;
             isChecked = true;
+        }
+
+        //带图例的子节点构造函数
+        public PropertyNodeItem(String name, String displayName, Layer layer, PropertyNodeItem parent, BitmapImage legend)
+        {
+            Children = new List<PropertyNodeItem>();
+            this.nodeType = NodeType.LeafNode;
+            this.Name = name;
+            this.DisplayName = displayName;
+            this.layer = layer;
+            this.parent = parent;
+            this.level = this.parent.level + 1;
+            isChecked = true;
+            this.Legend = legend;
         }
 
         public enum NodeType

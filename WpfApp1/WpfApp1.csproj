@@ -116,6 +116,9 @@
     <Compile Include="form\QueryResultForm.xaml.cs">
       <DependentUpon>QueryResultForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="form\test.xaml.cs">
+      <DependentUpon>test.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\MyList.cs" />
     <Compile Include="ViewModel\NotifyPropertyBase.cs" />
     <Compile Include="ViewModel\PropertyNodeItem.cs" />
@@ -138,6 +141,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="form\QueryResultForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="form\test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -221,9 +228,7 @@
   <ItemGroup>
     <Resource Include="Resouces\earth_ic.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="form\GP\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

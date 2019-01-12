@@ -44,8 +44,15 @@
                    FontWeight="SemiBold" Margin="0,0,0,0" Height="63" VerticalAlignment="Bottom" />
 
         </Border>
-
         <Button Name="complete_btn" Visibility="Hidden" Grid.Column="1" Grid.Row="4"  Click="onCompleteItemClick" HorizontalAlignment="Center" VerticalAlignment="Center" Height="42" Margin="33.2,95.6,283.4,29.6" Width="117" RenderTransformOrigin="-1.044,0.57" Background="Black" Foreground="White">完成</Button>
+
+
+        <!--<ScrollViewer Grid.Column="1" Grid.Row="1">
+            <StackPanel>
+                <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                <esri:Legend  GeoView="{Binding ElementName=MyMapView}" ReverseLayerOrder="False" FilterByVisibleScaleRange="True"  />
+            </StackPanel>
+        </ScrollViewer>-->
 
 
         <!--鹰眼地图-->
@@ -120,7 +127,7 @@
         <Label Grid.Column="1" Grid.Row="1" Margin="265.2,0,80.4,155.8">当前编辑状态：</Label>
         <TextBlock Grid.Column="1" Grid.Row="1" TextAlignment="Justify" Margin="353.2,5,4.6,159.8" Name="operationStatus" Grid.ColumnSpan="2">HELLO</TextBlock>
 
-
+        
         <!--图层树模板-->
         <TreeView Margin="3,24,2.8,3.6" Name="layerTreeView" 
                   Grid.RowSpan="4" RenderTransformOrigin="0.5,0.5"
@@ -128,11 +135,37 @@
 
             <TreeView.ItemTemplate >
                 <HierarchicalDataTemplate DataType="{x:Type local:PropertyNodeItem}" ItemsSource="{Binding Path=Children}" >
-                    <StackPanel Orientation="Horizontal" Margin="0,20,10,0" Width="300">
-                        <!--每一个item的布局-->
+
+                    <Grid Margin="0,20,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="3*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="7*"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox VerticalAlignment="Center"  Grid.Column="0" Grid.Row="0" Margin="0,0,10,2" IsChecked="{Binding IsChecked }" Checked="onChecked" Unchecked="onUnChecked"/>
+                        <Image VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,2,2"/>
+                        <TextBlock VerticalAlignment="Center" Grid.Column="2" Margin="3,0,0,0"  Grid.Row="0" Text="{Binding DisplayName}"/>
+                        <Image   Source="{Binding Legend}" HorizontalAlignment="Left" Margin="10,10,5,0" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"></Image>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Name="rename" Header="重命名" Click="onRenameItemClick"/>
+                                <MenuItem Name="remove" Header="移除图层" Click="onRemoveItemClick"/>
+                                <MenuItem Name="properity" Header="属性表" Click="onProperityClick"/>
+                                <MenuItem Name="symbol" Header="符号" Click="onSymbolItemClick"/>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                    </Grid>
+                    
+                    <!--<StackPanel Orientation="Horizontal" Margin="0,20,10,0" Width="300">
+                        --><!--每一个item的布局--><!--
                         <CheckBox VerticalAlignment="Center" Margin="0,0,10,2" IsChecked="{Binding IsChecked }" Checked="onChecked" Unchecked="onUnChecked"/>
                         <Image VerticalAlignment="Center" Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,2,2"/>
                         <TextBlock VerticalAlignment="Center" Text="{Binding DisplayName}"/>
+                        <Image Source="\Resouces\data_ic.png"></Image>
                         <StackPanel.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Name="rename" Header="重命名" Click="onRenameItemClick"/>
@@ -141,11 +174,11 @@
                                 <MenuItem Name="symbol" Header="符号" Click="onSymbolItemClick"/>
                             </ContextMenu>
                         </StackPanel.ContextMenu>
-                        <!--提示框-->
+                        --><!--提示框--><!--
                         <StackPanel.ToolTip>
                             <TextBlock VerticalAlignment="Center" Text="{Binding Name}" TextWrapping="Wrap" MaxWidth="200"/>
                         </StackPanel.ToolTip>
-                    </StackPanel>
+                    </StackPanel>-->
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
             <!--需要注意的是，如果是数据绑定生成节点，则样式对每个节点都生效

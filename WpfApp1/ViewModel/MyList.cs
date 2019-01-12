@@ -26,10 +26,6 @@ namespace WpfApp1.ViewModel
         public event clear onClear;
 
 
-
-
-
-
         //触发
         private void fireAddEvent(T item)
         {

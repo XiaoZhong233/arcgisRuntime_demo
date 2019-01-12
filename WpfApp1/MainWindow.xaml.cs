@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -21,10 +23,12 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using WpfApp1.Enum;
 using WpfApp1.form;
 using WpfApp1.ViewModel;
+using Point = System.Windows.Point;
 
 namespace WpfApp1
 {
@@ -39,7 +43,7 @@ namespace WpfApp1
         //保管结点列表
         private Dictionary<string, PropertyNodeItem> layersMap = new Dictionary<string, PropertyNodeItem>();
         private List<String> fileNames = new List<string>();
-        //图层树数据源
+        //图层树数据源,保存所有根节点
         List<PropertyNodeItem> itemList = new List<PropertyNodeItem>();
         //当前激活的底图菜单项
         private System.Windows.Controls.MenuItem curBaseMapMenuItem;
@@ -1033,8 +1037,10 @@ namespace WpfApp1
 
             if (layersMap.TryGetValue(directoryName, out root))
             {
-
-                PropertyNodeItem node = new PropertyNodeItem(file, fileName, featureLayer, root);
+                //建立子节点
+                //创建图例
+                BitmapImage bitmapImage = await getLegendAsync(featureLayer);
+                PropertyNodeItem node = new PropertyNodeItem(file, fileName, featureLayer, root,bitmapImage);
                 node.Icon = @"\Resouces\data_ic.png";
                 //如果已经有该文件，直接返回
                 if (fileNames.Contains(fileName))
@@ -1063,7 +1069,9 @@ namespace WpfApp1
                 layersMap.Add(directoryName, root);
                 //新建子节点
                 fileNames.Add(fileName);
-                PropertyNodeItem childNode = new PropertyNodeItem(file, fileName, featureLayer, root);
+                //创建图例
+                BitmapImage bitmapImage = await getLegendAsync(featureLayer);
+                PropertyNodeItem childNode = new PropertyNodeItem(file, fileName, featureLayer, root, bitmapImage);
                 childNode.Icon = @"\Resouces\data_ic.png";
                 //将子节点加入父节点中
                 root.Children.Add(childNode);
@@ -1076,6 +1084,35 @@ namespace WpfApp1
 
             this.layerTreeView.ItemsSource = itemList;
             layerTreeView.Items.Refresh();
+        }
+
+        /// <summary>
+        /// 获取要素图例
+        /// </summary>
+        /// <param name="featureLayer"></param>
+        /// <returns>返回bitmapImage</returns>
+        private async Task<BitmapImage> getLegendAsync(FeatureLayer featureLayer)
+        {
+
+
+            SimpleRenderer simpleRenderer = featureLayer.Renderer as SimpleRenderer;
+            Symbol symbol = simpleRenderer.Symbol;
+            Esri.ArcGISRuntime.UI.RuntimeImage image = await symbol.CreateSwatchAsync(System.Drawing.Color.WhiteSmoke);
+            System.Windows.Media.ImageSource imageSource = await Esri.ArcGISRuntime.UI.RuntimeImageExtensions.ToImageSourceAsync(image);
+            //System.Drawing.Image result = imageWpfToGDI(imageSource);
+            BitmapImage bitmapImage = BitmapToBitmapImage(ImageSourceToBitmap(imageSource));
+            //定义监听
+            //symbol.PropertyChanged += async (s, e) =>
+            //{
+            //    PropertyNodeItem target = PropertyNodeItem.findNode(itemList, x => x.nodeType == PropertyNodeItem.NodeType.LeafNode && x.layer as FeatureLayer == featureLayer);
+            //    if (target != null)
+            //    {
+            //        BitmapImage bim = await getLegendAsync(featureLayer);
+            //        target.Legend = bim;
+            //    }
+            //};
+            //TODO:symbol改变时，图层图例也要改变
+            return bitmapImage;
         }
 
 
@@ -1117,63 +1154,6 @@ namespace WpfApp1
                         if (MyMapView != null)
                         {
                             addFeatureLayerAsync(featureLayer, file);
-                            ////打开文件
-                            //MyMapView.Map.OperationalLayers.Add(featureLayer);
-                            //await MyMapView.SetViewpointGeometryAsync(featureLayer.FullExtent);
-
-                            //string directoryName = Path.GetDirectoryName(file);//截取出除去文件类型的路径名
-                            //string fileName = Path.GetFileNameWithoutExtension(file);//文件名
-
-                            ////更新图层树
-
-                            //PropertyNodeItem root = null;
-                            //if(layersMap.TryGetValue(directoryName,out root))
-                            //{
-
-                            //    PropertyNodeItem node = new PropertyNodeItem(file, fileName,featureLayer,root);
-                            //    node.Icon = @"\Resouces\data_ic.png";
-                            //    //如果已经有该文件，直接返回
-                            //    if (fileNames.Contains(fileName))
-                            //    {
-                            //        //在操作图层中移除该图层，为了和图层树保持一致,不可以有重复的图层
-                            //        MyMapView.Map.OperationalLayers.Remove(featureLayer);
-                            //        return;
-                            //    }
-                            //    fileNames.Add(fileName);
-                            //    //将图层加入到父节点保存的列表中
-                            //    List<Layer> layers = root.layers;
-                            //    layers.Add(featureLayer);
-                            //    //将子节点加入父节点中
-
-                            //    root.Children.Add(node);
-                            //}
-                            ////需要新建父节点
-                            //else
-                            //{
-                            //    //新建父节点
-                            //    List<Layer> layers = new List<Layer>();
-                            //    layers.Add(featureLayer);
-                            //    root = new PropertyNodeItem(directoryName, directoryName,layers);
-                            //    root.Icon = @"\Resouces\data_ic.png";
-
-                            //    layersMap.Add(directoryName, root);
-                            //    //新建子节点
-                            //    fileNames.Add(fileName);
-                            //    PropertyNodeItem childNode = new PropertyNodeItem(file, fileName, featureLayer,root);
-                            //    childNode.Icon = @"\Resouces\data_ic.png";
-                            //    //将子节点加入父节点中
-                            //    root.Children.Add(childNode);
-
-                            //}
-                            //if (!itemList.Contains(root))
-                            //{
-                            //    itemList.Add(root);
-                            //}
-
-                            //this.layerTreeView.ItemsSource = itemList;
-                            //layerTreeView.Items.Refresh();
-
-
                         }
                     }
                     else if (Regex.IsMatch(file, "^.*(.mdb)$"))
@@ -2317,6 +2297,67 @@ namespace WpfApp1
         public static byte getAlpha(double opacity)
         {
             return (byte)(opacity * 255);
+        }
+
+        /// <summary>
+        /// 将madia.imageSource转换成Bitmap
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static System.Drawing.Image imageWpfToGDI(System.Windows.Media.ImageSource image)
+        {
+            MemoryStream ms = new MemoryStream();
+            var encoder = new System.Windows.Media.Imaging.BmpBitmapEncoder();
+            encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(image as System.Windows.Media.Imaging.BitmapSource));
+            encoder.Save(ms);
+            ms.Flush();
+            return System.Drawing.Image.FromStream(ms);
+        }
+
+
+
+        /// <summary>
+        /// ImageSource --> Bitmap
+        /// </summary>
+        /// <param name="imageSource"></param>
+        /// <returns></returns>
+        public static System.Drawing.Bitmap ImageSourceToBitmap(ImageSource imageSource)
+        {
+            BitmapSource m = (BitmapSource)imageSource;
+
+            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(m.PixelWidth, m.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb); // 坑点：选Format32bppRgb将不带透明度
+
+            System.Drawing.Imaging.BitmapData data = bmp.LockBits(
+            new System.Drawing.Rectangle(System.Drawing.Point.Empty, bmp.Size), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+
+            m.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
+            bmp.UnlockBits(data);
+
+            return bmp;
+        }
+
+        /// <summary>
+        /// bitmap->bitmapImage
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static BitmapImage BitmapToBitmapImage(Bitmap bitmap)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                bitmap.Save(stream, ImageFormat.Png); // 坑点：格式选Bmp时，不带透明度
+
+                stream.Position = 0;
+                BitmapImage result = new BitmapImage();
+                result.BeginInit();
+                // According to MSDN, "The default OnDemand cache option retains access to the stream until the image is needed."
+                // Force the bitmap to load right now so we can dispose the stream.
+                result.CacheOption = BitmapCacheOption.OnLoad;
+                result.StreamSource = stream;
+                result.EndInit();
+                result.Freeze();
+                return result;
+            }
         }
 
         #endregion

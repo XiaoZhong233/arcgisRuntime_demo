@@ -378,7 +378,7 @@ namespace WpfApp1.form
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        private System.Drawing.Image imageWpfToGDI(System.Windows.Media.ImageSource image)
+        private  System.Drawing.Image imageWpfToGDI(System.Windows.Media.ImageSource image)
         {
             MemoryStream ms = new MemoryStream();
             var encoder = new System.Windows.Media.Imaging.BmpBitmapEncoder();
